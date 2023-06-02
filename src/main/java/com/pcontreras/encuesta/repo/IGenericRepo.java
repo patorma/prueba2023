@@ -1,4 +1,4 @@
-package com.pcontreras.encuesta.dao;
+package com.pcontreras.encuesta.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
