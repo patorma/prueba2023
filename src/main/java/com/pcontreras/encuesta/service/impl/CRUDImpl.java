@@ -13,35 +13,30 @@ public abstract class CRUDImpl<T,ID> implements ICRUD<T, ID> {
 	protected abstract IGenericRepo<T, ID> getRepo();
 
 	@Override
-	@Transactional
 	public T registrar(T t) throws Exception {
 		
 		return getRepo().save(t);
 	}
 
 	@Override
-	@Transactional
 	public T modificar(T t) throws Exception {
 		
 		return getRepo().save(t);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public List<T> listar() throws Exception {
 	
 		return getRepo().findAll();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public T listarPorId(ID id) throws Exception {
 		
 		return getRepo().findById(id).orElse(null);
 	}
 
 	@Override
-	@Transactional
 	public void eliminar(ID id) throws Exception {
 		getRepo().deleteById(id);
 		

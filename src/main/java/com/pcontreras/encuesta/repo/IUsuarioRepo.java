@@ -11,4 +11,7 @@ public interface IUsuarioRepo extends IGenericRepo<Usuario, Long> {
 
 	@Query("from TipoMusica")
 	public List<TipoMusica> findAllTiposMusicales();
+	
+	@Query(value = "SELECT COUNT(mail) FROM Usuarios",nativeQuery = true)
+	public int cantidad();
 }

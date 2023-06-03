@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pcontreras.encuesta.model.TipoMusica;
 import com.pcontreras.encuesta.repo.IGenericRepo;
@@ -25,6 +26,7 @@ public class TipoMusicaServiceImpl extends CRUDImpl<TipoMusica, Long> implements
 
 
 	@Override
+	@Transactional(readOnly = true)
 	public Page<TipoMusica> findAll(Pageable pageable) throws Exception {
 		
 		return repo.findAll(pageable);

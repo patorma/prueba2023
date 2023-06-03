@@ -128,7 +128,7 @@ public class UsuarioController {
 		}
 		
 		if(usuarioActual == null) {
-			response.put("mensaje", "Error: no se pudo editar, elusuario con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
+			response.put("mensaje", "Error: no se pudo editar, el usuario con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String, Object>>(response,HttpStatus.NOT_FOUND);
 		}
 		
@@ -169,5 +169,10 @@ public class UsuarioController {
 	@GetMapping("/usuarios/estilos")
 	public List<TipoMusica> listarEstilosMusicales(){
 		return usuarioService.findAllTiposMusicales();
+	}
+	
+	@GetMapping("/usuarios/cantidad")
+	public int CantidadUsuarios() {
+		return usuarioService.cantidad();
 	}
 }

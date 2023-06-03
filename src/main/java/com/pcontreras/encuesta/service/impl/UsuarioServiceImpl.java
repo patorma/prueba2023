@@ -34,9 +34,17 @@ public class UsuarioServiceImpl extends CRUDImpl<Usuario, Long> implements IUsua
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Page<Usuario> findAll(Pageable pageable) throws Exception {
 		
 		return repo.findAll(pageable) ;
+	}
+
+	@Override
+	@Transactional
+	public int cantidad() {
+		
+		return repo.cantidad();
 	}
 
 }

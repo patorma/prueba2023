@@ -64,7 +64,7 @@ public class TipoMusicaController {
 		}
 		
 		if(tipoMusica == null) {
-			response.put("mensaje", "El tipode música con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
+			response.put("mensaje", "El tipo de música con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.NOT_FOUND);
 		}
 		

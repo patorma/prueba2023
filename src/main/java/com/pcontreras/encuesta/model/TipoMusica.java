@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
-@Table(name = "tipo_musica")
+@Table(name = "tipos_musicales")
 @Data
 public class TipoMusica {
 	
