@@ -24,57 +24,58 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pcontreras.encuesta.model.TipoMusica;
-import com.pcontreras.encuesta.model.Usuario;
-import com.pcontreras.encuesta.service.IUsuarioService;
+
+import com.pcontreras.encuesta.service.ITipoMusicaService;
 
 import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200" })
 @RequestMapping("/api")
-public class UsuarioController {
+public class TipoMusicaController {
 	
 	@Autowired
-	private IUsuarioService usuarioService;
-
-	@GetMapping("/usuarios")
-	public List<Usuario> listar() throws Exception{
-		return usuarioService.listar();
+	private ITipoMusicaService tipoMusicaService;
+	
+	
+	@GetMapping("/estilosMusicales")
+	public List<TipoMusica> listar() throws Exception{
+		return tipoMusicaService.listar();
 	}
 	
-	@GetMapping("/usuarios/page/{page}")
-	public Page<Usuario> index(@PathVariable Integer page) throws Exception{
+	@GetMapping("/estilosMusicales/page/{page}")
+	public Page<TipoMusica> index(@PathVariable Integer page) throws Exception{
 		Pageable pageable = PageRequest.of(page, 4);
-		return usuarioService.findAll(pageable);
+		return tipoMusicaService.findAll(pageable);
 	}
 	
-	@GetMapping("/usuarios/{id}")
+	@GetMapping("/estilosMusicales/{id}")
 	public ResponseEntity<?> show(@PathVariable Long id) throws Exception{
 		
-		Usuario usuario = null;
+		TipoMusica tipoMusica = null;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			usuario = usuarioService.listarPorId(id);
+			tipoMusica = tipoMusicaService.listarPorId(id);
 		}catch(DataAccessException e) {
 			response.put("mensaje", "Error al realizar la consulta en la base de datos!");
 			response.put("error",e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		if(usuario == null) {
-			response.put("mensaje", "El usuario con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
+		if(tipoMusica == null) {
+			response.put("mensaje", "El tipode música con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<Usuario>(usuario,HttpStatus.OK);
+		return new ResponseEntity<TipoMusica>(tipoMusica,HttpStatus.OK);
 	}
 	
-	@PostMapping("/usuarios")
-	public ResponseEntity<?> create(@Valid @RequestBody Usuario usuario,BindingResult result) throws Exception{
-		// es el nuevo usuario creado
+	@PostMapping("/estilosMusicales")
+	public ResponseEntity<?> create(@Valid @RequestBody TipoMusica tipoMusica,BindingResult result) throws Exception{
+		// es el nuevo tipoMusica creado
 		//se inicializa
-		Usuario usuarioNew = null;
+		TipoMusica tipoMusicaNew = null;
 		Map<String, Object> response =new HashMap<>();
 		
 		// se valida si contiene errores el objeto 
@@ -88,25 +89,25 @@ public class UsuarioController {
 			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.BAD_REQUEST);
 		}
 		try {
-			usuarioNew = usuarioService.registrar(usuario);
+			tipoMusicaNew = tipoMusicaService.registrar(tipoMusica);
 		}catch(DataAccessException e) {
 			response.put("mensaje", "Error al realizar el insert en la base de datos!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("mensaje", "El usuario ha sido creado éxito! ");
-		response.put("usuario", usuarioNew);
+		response.put("mensaje", "El tipo de música ha sido creado éxito! ");
+		response.put("tipoMusica", tipoMusicaNew);
 		return new ResponseEntity<Map<String, Object>>(response,HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/usuarios/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody Usuario usuario,BindingResult result,@PathVariable Long id) throws Exception{
+	@PutMapping("/estilosMusicales/{id}")
+	public ResponseEntity<?> update(@Valid @RequestBody TipoMusica tipoMusica,BindingResult result,@PathVariable Long id) throws Exception{
 		
-		//se obtiene el usuario que se quiere modificar
-		Usuario usuarioActual = usuarioService.listarPorId(id);
+		//se obtiene el tipoMusica que se quiere modificar
+		TipoMusica tipoMusicaActual = tipoMusicaService.listarPorId(id);
 		
-		//Usuario ya actualizado
-		Usuario usuarioUpdated = null;
+		//TipoMusica ya actualizado
+		TipoMusica tipoMusicaUpdated = null;
 		
 
 		Map<String, Object> response = new HashMap<>();
@@ -127,47 +128,43 @@ public class UsuarioController {
 			// en lo anterior se recibe un field errors y lo convertimos a string
 		}
 		
-		if(usuarioActual == null) {
-			response.put("mensaje", "Error: no se pudo editar, elusuario con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
+		if(tipoMusicaActual == null) {
+			response.put("mensaje", "Error: no se pudo editar, el tipo de música con ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String, Object>>(response,HttpStatus.NOT_FOUND);
 		}
 		
 		try {
-			//modificamos los datos del usuario actual con los datos del gasto que te envien
-			usuarioActual.setMail(usuario.getMail());
-			usuarioActual.setTipoMusica(usuario.getTipoMusica());
+			//modificamos los datos del tip de música actual con los datos del estilo musical que te envian
+			tipoMusicaActual.setEstiloMusical(tipoMusica.getEstiloMusical());
+	
 			
-			usuarioUpdated = usuarioService.registrar(usuarioActual);
+			tipoMusicaUpdated = tipoMusicaService.registrar(tipoMusicaActual);
 		}catch(DataAccessException e) {
-			response.put("mensaje", "Error al actualizar al usuario en la base de datos!");
+			response.put("mensaje", "Error al actualizar al tipo de música en la base de datos!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 		
-		response.put("mensaje", "El usuario ha sido actualizado con éxito!");
-		response.put("usuario", usuarioUpdated);
+		response.put("mensaje", "El tipo de música ha sido actualizado con éxito!");
+		response.put("tipoMusica", tipoMusicaUpdated);
 		
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/usuarios/{id}")
+	@DeleteMapping("/estilosMusicales/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) throws Exception{
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			usuarioService.eliminar(id);
+			tipoMusicaService.eliminar(id);
 		}catch (DataAccessException e) {
-			response.put("mensaje", "Error al eliminar al usuario de la base de datos!");
+			response.put("mensaje", "Error al eliminar al tipo de música de la base de datos!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		response.put("mensaje", "El usuario fue eliminado con éxito!");
+		response.put("mensaje", "El tipo de música fue eliminado con éxito!");
 		return new ResponseEntity<Map<String, Object>>(response,HttpStatus.OK);
 	}
 	
-	@GetMapping("/usuarios/estilos")
-	public List<TipoMusica> listarEstilosMusicales(){
-		return usuarioService.findAllTiposMusicales();
-	}
 }
