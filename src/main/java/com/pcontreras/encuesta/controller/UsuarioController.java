@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pcontreras.encuesta.model.TipoMusica;
+
 import com.pcontreras.encuesta.model.Usuario;
 import com.pcontreras.encuesta.service.IUsuarioService;
+
 
 import jakarta.validation.Valid;
 
@@ -170,6 +172,12 @@ public class UsuarioController {
 	public List<TipoMusica> listarEstilosMusicales(){
 		return usuarioService.findAllTiposMusicales();
 	}
+	
+	@GetMapping("/usuarios/tendencia")
+	public List<Object[]> listarCantidadUsuariosByTipoMusica(){
+		return usuarioService.obtenerCantidadUsuariosPorTipoMusical();
+	}
+	/* public List<TipoMusicalCount> obtenerCantidadUsuariosPorTipoMusical();*/
 	
 	@GetMapping("/usuarios/cantidad")
 	public int CantidadUsuarios() {

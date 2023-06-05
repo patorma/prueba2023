@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pcontreras.encuesta.model.TipoMusica;
+
 import com.pcontreras.encuesta.model.Usuario;
 import com.pcontreras.encuesta.repo.IGenericRepo;
 import com.pcontreras.encuesta.repo.IUsuarioRepo;
 import com.pcontreras.encuesta.service.IUsuarioService;
+
+
 
 @Service
 public class UsuarioServiceImpl extends CRUDImpl<Usuario, Long> implements IUsuarioService{
@@ -45,6 +48,13 @@ public class UsuarioServiceImpl extends CRUDImpl<Usuario, Long> implements IUsua
 	public int cantidad() {
 		
 		return repo.cantidad();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object[]> obtenerCantidadUsuariosPorTipoMusical() {
+		
+		return repo.obtenerCantidadUsuariosPorTipoMusical();
 	}
 
 }
